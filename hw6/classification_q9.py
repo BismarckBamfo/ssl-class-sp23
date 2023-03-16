@@ -15,7 +15,15 @@ class T5(nn.Module):
     def __init__(self, t5model, num_labels=2):
         super().__init__()
         self.model = T5Model.from_pretrained(t5model)
-        self.classifier = nn.Linear(512, num_labels)
+        if t5model == 't5-large':
+            self.classifier = nn.Linear(1024, num_labels)
+        elif t5model == 't5-base':
+            self.classifier = nn.Linear(768, num_labels)
+        elif t5model == 't5-small':
+            self.classifier = nn.Linear(512, num_labels)
+        else:
+            print("Model not supported, defaulting to t5-small")
+            self.classifier = nn.Linear(512, num_labels)
     
     def forward(self, input_ids, attention_mask, decoder_input_ids):
         output = self.model(input_ids=input_ids, attention_mask=attention_mask, decoder_input_ids=decoder_input_ids)
