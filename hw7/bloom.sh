@@ -5,6 +5,7 @@
 #SBATCH --qos=qos_gpu
 #SBATCH --gres=gpu:1
 #SBATCH --nodes=1
+#SBATCH --mem=20G
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=12:00:00
 #SBATCH --job-name="HW7 CS 601.471/671 homework"

@@ -43,17 +43,16 @@ def generate_text(args):
 def make_prompt(args):
     dataset = load_dataset("boolq")
     examples = dataset["train"].shuffle(seed=args.seed)
-    prompt_yes = [f"QUESTION: {examples['question'][i]}  PASSAGE: {examples['passage'][i]}  ANSWER: {examples['answer'][i]}" for i in range(4) if examples['answer'][i] == True]
-    prompt_no = [f"QUESTION: {examples['question'][i]}  PASSAGE: {examples['passage'][i]}  ANSWER: {examples['answer'][i]}" for i in range(4) if examples['answer'][i] == False]
+    prompt_yes = [f"QUESTION: {examples['question'][i]}  PASSAGE: {examples['passage'][i]}  ANSWER: {examples['answer'][i]}" for i in range(5) if examples['answer'][i] == True]
+    prompt_no = [f"QUESTION: {examples['question'][i]}  PASSAGE: {examples['passage'][i]}  ANSWER: {examples['answer'][i]}" for i in range(5) if examples['answer'][i] == False]
     prompt = [p for pair in zip(prompt_yes, prompt_no) for p in pair]
-    answers = [examples['answer'][i] for i in range(args.num_examples, args.num_examples+100)]
-    new_examples = [f"QUESTION: {examples['question'][i]}  PASSAGE: {examples['passage'][i]}  ANSWER: " for i in range(args.num_examples, args.num_examples+100)]
+    answers = [examples['answer'][i] for i in range(args.num_examples+100, args.num_examples+200)]
+    new_examples = [f"QUESTION: {examples['question'][i]}  PASSAGE: {examples['passage'][i]}  ANSWER: " for i in range(args.num_examples+100, args.num_examples+200)]
 
     return prompt, new_examples, answers
 
 def generate_prompt(prompt, new_example):
-    prompt.append(new_example)
-    prompts = "\n".join(prompt)
+    prompts = " ".join(prompt + [new_example])
     return prompts
 
 
@@ -72,7 +71,7 @@ if __name__ == "__main__":
     parser.add_argument("--max_new_tokens", type=int, default=10)
     parser.add_argument("--decoding_strategy", type=str, default="top_k", choices=["top_k", "top_p", "beam_search", "greedy"])
     parser.add_argument("--num_beams", type=int, default=5)
-    parser.add_argument("--num_examples", type=int, default=10)
+    parser.add_argument("--num_examples", type=int, default=8)
     args = parser.parse_args()
 
     generate_text(args)
