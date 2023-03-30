@@ -2,7 +2,6 @@
 
 #SBATCH -A cs601_gpu
 #SBATCH --partition=a100
-#SBATCH --reservation=MIG
 #SBATCH --qos=qos_gpu
 #SBATCH --gres=gpu:1
 #SBATCH --nodes=1
