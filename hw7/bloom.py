@@ -36,6 +36,7 @@ def generate_text(args):
 
         with open(args.output, "a") as f:
             f.write(f"{output_text}\n\n\n")
+            f.write(f"------------------------------------------------\n\n\n")
 
     with open(args.output, "a") as f:
             f.writelines(f"{answers}")
@@ -43,11 +44,11 @@ def generate_text(args):
 def make_prompt(args):
     dataset = load_dataset("boolq")
     examples = dataset["train"].shuffle(seed=args.seed)
-    prompt_yes = [f"QUESTION: {examples['question'][i]}  PASSAGE: {examples['passage'][i]}  ANSWER: {examples['answer'][i]}" for i in range(5) if examples['answer'][i] == True]
-    prompt_no = [f"QUESTION: {examples['question'][i]}  PASSAGE: {examples['passage'][i]}  ANSWER: {examples['answer'][i]}" for i in range(5) if examples['answer'][i] == False]
+    prompt_yes = [f"QUESTION: {examples['question'][i]} \n PASSAGE: {examples['passage'][i]} \n ANSWER: {examples['answer'][i]}" for i in range(20) if examples['answer'][i] == True]
+    prompt_no = [f"QUESTION: {examples['question'][i]} \n  PASSAGE: {examples['passage'][i]}  \n ANSWER: {examples['answer'][i]}" for i in range(20) if examples['answer'][i] == False]
     prompt = [p for pair in zip(prompt_yes, prompt_no) for p in pair]
     answers = [examples['answer'][i] for i in range(args.num_examples+100, args.num_examples+200)]
-    new_examples = [f"QUESTION: {examples['question'][i]}  PASSAGE: {examples['passage'][i]}  ANSWER: " for i in range(args.num_examples+100, args.num_examples+200)]
+    new_examples = [f"QUESTION: {examples['question'][i]}  \n PASSAGE: {examples['passage'][i]}  \n ANSWER: " for i in range(args.num_examples+100, args.num_examples+200)]
 
     return prompt, new_examples, answers
 
