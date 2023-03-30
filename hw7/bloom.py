@@ -12,8 +12,8 @@ def generate_text(args):
     prompt, new_examples, answers = make_prompt(args)
 
     for new_example in new_examples:
-        prompt = generate_prompt(prompt, new_example)
-        input_ids = tokenizer(prompt, return_tensors="pt").input_ids
+        prompts = generate_prompt(prompt, new_example)
+        input_ids = tokenizer(prompts, return_tensors="pt").input_ids
         input_ids = input_ids.to("cuda" if torch.cuda.is_available() else "cpu")
 
         if args.decoding_strategy == "top_k":
@@ -31,11 +31,11 @@ def generate_text(args):
         else:
             raise ValueError("Decoding strategy not supported")
 
-        output_text = tokenizer.decode(output, skip_special_tokens=True)
+        output_text = tokenizer.decode(output[0], skip_special_tokens=True)
 
 
         with open(args.output, "a") as f:
-            f.write(f"{prompt}\n\n\n")
+            f.write(f"{output_text}\n\n\n")
 
     with open(args.output, "a") as f:
             f.writelines(f"{answers}")
@@ -53,8 +53,8 @@ def make_prompt(args):
 
 def generate_prompt(prompt, new_example):
     prompt.append(new_example)
-    prompt = "\n".join(prompt)
-    return prompt
+    prompts = "\n".join(prompt)
+    return prompts
 
 
 if __name__ == "__main__":
